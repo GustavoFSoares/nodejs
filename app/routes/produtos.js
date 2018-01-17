@@ -3,7 +3,7 @@ module.exports = function (app) {
     
     app.get("/produtos", function (req, res) {
         let connection = app.infra.connectionFactory();
-        let produtosBanco = app.infra.produtosBanco(connection);
+        let produtosBanco = new app.infra.ProdutosDAO(connection);
 
         produtosBanco.lista(function(err, resultados){
             res.render("produtos/lista", {lista: resultados});
