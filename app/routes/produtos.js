@@ -1,22 +1,29 @@
 
 module.exports = function (app) {
-    
-    app.get("/produtos", function (req, res) {
+    var listaProdutos = function(req, res){
         let connection = app.infra.connectionFactory();
-        let produtosBanco = new app.infra.ProdutosDAO(connection);
+        let produtosDAO = new app.infra.ProdutosDAO(connection);
 
-        produtosBanco.lista(function(err, resultados){
-            res.render("produtos/lista", {lista: resultados});
+        produtosDAO.lista(function (err, resultados) {
+            res.render("produtos/lista", { lista: resultados });
         });
         connection.end(); 
+    }
+
+    app.get("/produtos", listaProdutos);
+
+    app.get("/produtos/form", function(req, res){
+        res.render('produtos/form')
     });
 
-    app.get('/produtos/remove', function(){
+    app.post("/produtos", function(req, res){
         let connection = app.infra.connectionFactory();
-        let produtosBanco = app.infra.produtosBanco;
-        let produto = produtosBanco.carrega(connection, id, callback);
-        if(produto){
-            produtosBanco.remove(connection, produto, callback)
-        }
+        let produtosDAO = new app.infra.ProdutosDAO(connection);
+
+        let produto = req.body;
+        
+        produtosDAO.salva(produto, function(err, resultados){
+            res.redirect('/produtos');
+        });
     });
 }

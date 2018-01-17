@@ -7,6 +7,11 @@ ProdutosDAO.prototype.lista = function(callback){
     return this;
 }
 
+ProdutosDAO.prototype.salva = function (produtos, callback){
+    
+    this._connection.query('insert into livros set ?', produtos, callback);
+    return this;
+}
 module.exports = function(){
    return ProdutosDAO;
 }
